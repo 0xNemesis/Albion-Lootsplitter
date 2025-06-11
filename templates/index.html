@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-treasure-chest text-warning me-3"></i>
+                Loot Distribution Calculator
+            </h1>
+            <p class="lead text-muted">
+                Calculate fair silver distribution based on party member participation time
+            </p>
+        </div>
+
+        <!-- Calculator Form -->
+        <div class="card shadow-lg border-0 mb-5">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-calculator me-2"></i>
+                    Session Details
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="lootForm">
+                    <!-- Session Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="total_silver" class="form-label fw-bold">
+                                <i class="fas fa-coins text-warning me-1"></i>
+                                Total Silver
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="total_silver" name="total_silver" 
+                                       required min="1" placeholder="1000000">
+                                <span class="input-group-text">
+                                    <i class="fas fa-coins text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="start_time" class="form-label fw-bold">
+                                <i class="fas fa-play text-success me-1"></i>
+                                Start Time (UTC)
+                            </label>
+                            <input type="time" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_time" class="form-label fw-bold">
+                                <i class="fas fa-stop text-danger me-1"></i>
+                                End Time (UTC)
+                            </label>
+                            <input type="time" class="form-control" id="end_time" name="end_time" required>
+                        </div>
+                    </div>
+
+                    <!-- Party Members Section -->
+                    <div class="border-top pt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">
+                                <i class="fas fa-users text-info me-2"></i>
+                                Party Members
+                            </h4>
+                            <button type="button" class="btn btn-success btn-sm" id="addMember">
+                                <i class="fas fa-plus me-1"></i>
+                                Add Member
+                            </button>
+                        </div>
+
+                        <div id="membersContainer">
+                            <!-- Initial member row -->
+                            <div class="member-row mb-3 p-3 border rounded bg-light">
+                                <div class="row align-items-end">
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            <i class="fas fa-user me-1"></i>
+                                            Member Name
+                                        </label>
+                                        <input type="text" class="form-control" name="member_name[]" 
+                                               placeholder="Enter player name" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Join Time (UTC)
+                                        </label>
+                                        <input type="time" class="form-control" name="member_join_time[]" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-member">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-calculator me-2"></i>
+                            Calculate Distribution
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        {% if results %}
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Loot Distribution Results
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- Session Summary -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4 text-warning mb-1">
+                                <i class="fas fa-coins me-1"></i>
+                                {{ "{:,}".format(results.total_silver) }}
+                            </div>
+                            <small class="text-muted">Total Silver</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4 text-info mb-1">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ results.session_duration }}m
+                            </div>
+                            <small class="text-muted">Session Duration</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4 text-success mb-1">
+                                <i class="fas fa-users me-1"></i>
+                                {{ results.members|length }}
+                            </div>
+                            <small class="text-muted">Party Members</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4 text-primary mb-1">
+                                <i class="fas fa-share-alt me-1"></i>
+                                {{ "{:,}".format(results.total_distributed) }}
+                            </div>
+                            <small class="text-muted">Distributed</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Distribution Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th><i class="fas fa-user me-1"></i>Member</th>
+                                <th><i class="fas fa-sign-in-alt me-1"></i>Join Time</th>
+                                <th><i class="fas fa-hourglass-half me-1"></i>Participation</th>
+                                <th><i class="fas fa-percentage me-1"></i>Share %</th>
+                                <th><i class="fas fa-coins me-1"></i>Silver</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in results.members %}
+                            <tr>
+                                <td class="fw-bold">
+                                    <i class="fas fa-shield-alt text-info me-2"></i>
+                                    {{ member.name }}
+                                </td>
+                                <td>{{ member.join_time }}</td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ member.participation_minutes }}m
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             style="width: {{ member.participation_percentage }}%">
+                                            {{ member.participation_percentage }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-warning">
+                                    <i class="fas fa-coins me-1"></i>
+                                    {{ "{:,}".format(member.silver_share) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- New Calculation Button -->
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-redo me-2"></i>
+                        New Calculation
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
