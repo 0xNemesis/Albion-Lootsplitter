@@ -1,0 +1,295 @@
+/* Custom styles for Albion Online Loot Calculator - Dark Theme */
+
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header h1 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-weight: 700;
+}
+
+header p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+}
+
+/* Card styling */
+.card {
+    border: 1px solid #2d3748;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+    background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    background: linear-gradient(45deg, #2b6cb0, #2c5282);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    border: none;
+    font-weight: 600;
+}
+
+.card-header h5, .card-header h6 {
+    margin: 0;
+}
+
+/* Tab styling */
+.nav-tabs {
+    border: none;
+    margin-bottom: 2rem;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 25px;
+    margin-right: 10px;
+    background: rgba(45, 55, 72, 0.6);
+    color: #e0e0e0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    background: rgba(45, 55, 72, 0.8);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(45deg, #2b6cb0, #2c5282);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styling */
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #2b6cb0, #2c5282);
+    border: none;
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #38a169, #2f855a);
+    border: none;
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, #d69e2e, #b7791f);
+    border: none;
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #e53e3e, #c53030);
+    border: none;
+    color: white;
+}
+
+/* Form styling */
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #4a5568;
+    transition: all 0.2s ease;
+    background: #2d3748;
+    color: #e0e0e0;
+}
+
+.form-control:focus {
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 0.2rem rgba(43, 108, 176, 0.25);
+    background: #2d3748;
+    color: #e0e0e0;
+}
+
+.form-control::placeholder {
+    color: #a0aec0;
+}
+
+/* Table styling */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #2d3748;
+    color: #e0e0e0;
+}
+
+.table thead th {
+    background: linear-gradient(45deg, #4a5568, #2d3748);
+    border: none;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+    background: #2d3748;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(43, 108, 176, 0.1);
+    transform: scale(1.01);
+}
+
+/* Results styling */
+.result-card {
+    background: linear-gradient(135deg, #2d3748, #1a202c);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid #4a5568;
+}
+
+.result-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.result-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #63b3ed;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.loot-amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #68d391;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .result-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        width: 100%;
+    }
+}
+
+/* Animation for loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+}
+
+.empty-state i {
+    opacity: 0.5;
+    margin-bottom: 15px;
+    color: #718096;
+}
+
+/* Error styling */
+.error-message {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.success-message {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+/* Footer styling */
+.footer-credit {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.creator-name {
+    color: #63b3ed;
+    font-weight: 600;
+    margin-left: 5px;
+    text-shadow: 0 0 10px rgba(99, 179, 237, 0.3);
+    transition: all 0.3s ease;
+}
+
+.creator-name:hover {
+    color: #90cdf4;
+    text-shadow: 0 0 15px rgba(99, 179, 237, 0.5);
+}

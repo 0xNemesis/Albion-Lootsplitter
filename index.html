@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albion Online Loot Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <header class="text-center py-4 mb-4">
+            <h1 class="display-4"><i class="fas fa-coins text-warning"></i> Albion Online Loot Calculator</h1>
+            <p class="lead text-muted">Calculate fair loot distribution based on participation time</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="simple-tab" data-bs-toggle="tab" data-bs-target="#simple-split" type="button" role="tab">
+                    <i class="fas fa-clock"></i> Simple Time-Based Split
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced-split" type="button" role="tab">
+                    <i class="fas fa-list-alt"></i> Advanced Loot Log Split
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="mainTabContent">
+            <!-- Simple Time-Based Split -->
+            <div class="tab-pane fade show active" id="simple-split" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-cog"></i> Configuration</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="totalLoot" class="form-label">Total Loot (Silver)</label>
+                                    <input type="number" class="form-control" id="totalLoot" placeholder="Enter total loot amount" min="0">
+                                </div>
+                                
+                                <h6>Add Players</h6>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="playerName" placeholder="Player name">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="time" class="form-control" id="joinTime" title="Join time">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="time" class="form-control" id="leaveTime" title="Leave time (optional)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-primary w-100" onclick="addPlayer()">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Leave time empty if player stayed until the end</small>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6><i class="fas fa-users"></i> Players List</h6>
+                                <button type="button" class="btn btn-success btn-sm" onclick="calculateSimpleSplit()">
+                                    <i class="fas fa-calculator"></i> Calculate
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Join</th>
+                                                <th>Leave</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="playersTable">
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">No players added yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-chart-pie"></i> Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="simpleResults">
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                                        <p>Add players and click Calculate to see results</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Loot Log Split -->
+            <div class="tab-pane fade" id="advanced-split" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fas fa-users"></i> Party Members</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" id="advPlayerName" placeholder="Player name">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="time" class="form-control" id="advJoinTime" title="Join time">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="time" class="form-control" id="advLeaveTime" title="Leave time (optional)">
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-primary w-100" onclick="addAdvancedPlayer()">
+                                            <i class="fas fa-plus"></i> Add Player
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Join</th>
+                                                <th>Leave</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="advPlayersTable">
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">No players added</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fas fa-treasure-chest"></i> Loot Events</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <input type="time" class="form-control" id="lootTime" placeholder="Loot time">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="lootAmount" placeholder="Amount" min="0">
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-warning w-100" onclick="addLootEvent()">
+                                            <i class="fas fa-plus"></i> Add Loot
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="lootEventsTable">
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">No loot events added</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <button type="button" class="btn btn-success w-100 mt-3" onclick="calculateAdvancedSplit()">
+                                    <i class="fas fa-calculator"></i> Calculate Distribution
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-chart-bar"></i> Final Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="advancedResults">
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                                        <p>Add players and loot events, then calculate to see distribution</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5">
+        <div class="footer-credit">
+            <span class="text-muted">Created by</span>
+            <span class="creator-name">0xEscanor</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
