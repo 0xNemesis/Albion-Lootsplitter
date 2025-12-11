@@ -1,14 +1,8 @@
-// Albion Online Loot Calculator
-// In-memory data storage and calculation logic
-
-// Data structures for simple split
 let simplePlayers = [];
 
-// Data structures for advanced split
 let advancedPlayers = [];
 let lootEvents = [];
 
-// Utility functions for time handling
 function timeToMinutes(timeString) {
     if (!timeString) return null;
     const [hours, minutes] = timeString.split(':').map(Number);
@@ -26,16 +20,13 @@ function formatNumber(num) {
 }
 
 function showError(message) {
-    // Create and show error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message fade-in';
     errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-    
-    // Insert at the top of active tab
+
     const activeTab = document.querySelector('.tab-pane.active');
     activeTab.insertBefore(errorDiv, activeTab.firstChild);
-    
-    // Remove after 5 seconds
+
     setTimeout(() => {
         if (errorDiv.parentNode) {
             errorDiv.remove();
@@ -44,16 +35,13 @@ function showError(message) {
 }
 
 function showSuccess(message) {
-    // Create and show success message
     const successDiv = document.createElement('div');
     successDiv.className = 'success-message fade-in';
     successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-    
-    // Insert at the top of active tab
+
     const activeTab = document.querySelector('.tab-pane.active');
     activeTab.insertBefore(successDiv, activeTab.firstChild);
-    
-    // Remove after 3 seconds
+
     setTimeout(() => {
         if (successDiv.parentNode) {
             successDiv.remove();
@@ -61,7 +49,6 @@ function showSuccess(message) {
     }, 3000);
 }
 
-// Simple Time-Based Split Functions
 function addPlayer() {
     const name = document.getElementById('playerName').value.trim();
     const joinTime = document.getElementById('joinTime').value;
@@ -76,8 +63,7 @@ function addPlayer() {
         showError('Please enter a join time');
         return;
     }
-    
-    // Check if player already exists
+
     if (simplePlayers.some(p => p.name.toLowerCase() === name.toLowerCase())) {
         showError('Player already exists');
         return;
@@ -92,8 +78,7 @@ function addPlayer() {
     
     simplePlayers.push(player);
     updatePlayersTable();
-    
-    // Clear form
+
     document.getElementById('playerName').value = '';
     document.getElementById('joinTime').value = '';
     document.getElementById('leaveTime').value = '';
@@ -140,8 +125,7 @@ function calculateSimpleSplit() {
         showError('Please enter a valid total loot amount');
         return;
     }
-    
-    // Find the latest leave time or current time as end time
+
     let endTime = null;
     simplePlayers.forEach(player => {
         if (player.leaveTime) {
@@ -151,14 +135,12 @@ function calculateSimpleSplit() {
             }
         }
     });
-    
-    // If no one has left, ask for end time or use a default
+
     if (!endTime) {
         const now = new Date();
         endTime = now.getHours() * 60 + now.getMinutes();
     }
-    
-    // Calculate each player's participation
+
     const results = [];
     let totalDuration = 0;
     
@@ -186,8 +168,7 @@ function calculateSimpleSplit() {
         showError('Total participation time is zero');
         return;
     }
-    
-    // Calculate percentages and loot shares
+
     results.forEach(result => {
         result.percentage = (result.duration / totalDuration) * 100;
         result.lootShare = (result.duration / totalDuration) * totalLoot;
@@ -251,7 +232,6 @@ function displaySimpleResults(results, totalLoot, totalDuration) {
     showSuccess('Loot split calculated successfully!');
 }
 
-// Advanced Loot Log Split Functions
 function addAdvancedPlayer() {
     const name = document.getElementById('advPlayerName').value.trim();
     const joinTime = document.getElementById('advJoinTime').value;
@@ -266,8 +246,7 @@ function addAdvancedPlayer() {
         showError('Please enter a join time');
         return;
     }
-    
-    // Check if player already exists
+
     if (advancedPlayers.some(p => p.name.toLowerCase() === name.toLowerCase())) {
         showError('Player already exists');
         return;
@@ -283,7 +262,6 @@ function addAdvancedPlayer() {
     advancedPlayers.push(player);
     updateAdvancedPlayersTable();
     
-    // Clear form
     document.getElementById('advPlayerName').value = '';
     document.getElementById('advJoinTime').value = '';
     document.getElementById('advLeaveTime').value = '';
@@ -388,7 +366,6 @@ function calculateAdvancedSplit() {
         return;
     }
     
-    // Initialize player totals
     const playerTotals = {};
     const playerDetails = {};
     
@@ -397,12 +374,10 @@ function calculateAdvancedSplit() {
         playerDetails[player.name] = [];
     });
     
-    // Process each loot event
     lootEvents.forEach(event => {
         const lootTimeMinutes = timeToMinutes(event.time);
         const activePlayers = [];
         
-        // Find who was active during this loot event
         advancedPlayers.forEach(player => {
             const joinMinutes = timeToMinutes(player.joinTime);
             const leaveMinutes = player.leaveTime ? timeToMinutes(player.leaveTime) : Infinity;
@@ -534,14 +509,13 @@ function displayAdvancedResults(playerTotals, playerDetails) {
     showSuccess('Advanced loot distribution calculated successfully!');
 }
 
-// Initialize application
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize empty tables
+
     updatePlayersTable();
     updateAdvancedPlayersTable();
     updateLootEventsTable();
     
-    // Add Enter key support for forms
     document.getElementById('playerName').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') addPlayer();
     });
