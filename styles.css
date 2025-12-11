@@ -1,5 +1,3 @@
-/* Custom styles for Albion Online Loot Calculator - Dark Theme */
-
 body {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
@@ -24,7 +22,6 @@ header p {
     font-size: 1.1rem;
 }
 
-/* Card styling */
 .card {
     border: 1px solid #2d3748;
     border-radius: 15px;
@@ -50,7 +47,6 @@ header p {
     margin: 0;
 }
 
-/* Tab styling */
 .nav-tabs {
     border: none;
     margin-bottom: 2rem;
@@ -78,7 +74,6 @@ header p {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Button styling */
 .btn {
     border-radius: 10px;
     font-weight: 500;
@@ -114,7 +109,6 @@ header p {
     color: white;
 }
 
-/* Form styling */
 .form-control {
     border-radius: 10px;
     border: 2px solid #4a5568;
@@ -134,7 +128,6 @@ header p {
     color: #a0aec0;
 }
 
-/* Table styling */
 .table {
     border-radius: 10px;
     overflow: hidden;
@@ -159,7 +152,6 @@ header p {
     transform: scale(1.01);
 }
 
-/* Results styling */
 .result-card {
     background: linear-gradient(135deg, #2d3748, #1a202c);
     border-radius: 15px;
@@ -206,7 +198,6 @@ header p {
     color: #68d391;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .container-fluid {
         padding: 10px;
@@ -230,7 +221,6 @@ header p {
     }
 }
 
-/* Animation for loading states */
 .loading {
     opacity: 0.6;
     pointer-events: none;
@@ -245,7 +235,6 @@ header p {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Empty state styling */
 .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -258,7 +247,6 @@ header p {
     color: #718096;
 }
 
-/* Error styling */
 .error-message {
     background: linear-gradient(45deg, #dc3545, #c82333);
     color: white;
@@ -275,7 +263,6 @@ header p {
     margin: 15px 0;
 }
 
-/* Footer styling */
 .footer-credit {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.6);
