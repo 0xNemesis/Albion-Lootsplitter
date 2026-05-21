@@ -114,32 +114,57 @@
 
             <!-- Advanced Loot Log Split -->
             <div class="tab-pane fade" id="advanced-split" role="tabpanel">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card">
+
+                <div class="row g-4">
+
+                    <!-- Party Members -->
+                    <div class="col-lg-5">
+                        <div class="card h-100">
                             <div class="card-header">
-                                <h6><i class="fas fa-users"></i> Party Members</h6>
+                                <h6>
+                                    <i class="fas fa-users"></i>
+                                    Party Members
+                                </h6>
                             </div>
+
                             <div class="card-body">
+
+                                <!-- Bulk Generate -->
                                 <div class="row g-2 mb-3">
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="advPlayerName" placeholder="Player name">
+                                    <div class="col-8">
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="playerCount"
+                                            placeholder="Total players"
+                                            min="1">
                                     </div>
-                                    <div class="col-6">
-                                        <input type="time" class="form-control" id="advJoinTime" title="Join time">
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="time" class="form-control" id="advLeaveTime" title="Leave time (optional)">
-                                    </div>
-                                    <div class="col-12">
-                                        <button type="button" class="btn btn-primary w-100" onclick="addAdvancedPlayer()">
-                                            <i class="fas fa-plus"></i> Add Player
+
+                                    <div class="col-4">
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary w-100"
+                                            onclick="generatePlayerRows()">
+                                            Generate
                                         </button>
                                     </div>
                                 </div>
-                                
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
+
+                                <!-- Add Row -->
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-light w-100 mb-3"
+                                    onclick="addEditablePlayerRow()">
+
+                                    <i class="fas fa-plus"></i>
+                                    Add Row
+                                </button>
+
+                                <!-- Editable Table -->
+                                <div class="table-responsive"
+                                    style="max-height: 500px; overflow-y:auto;">
+
+                                    <table class="table table-sm align-middle">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -148,35 +173,64 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
+
                                         <tbody id="advPlayersTable">
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted">No players added</td>
+                                                <td colspan="4"
+                                                    class="text-center text-muted">
+                                                    No players added
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
-                        <div class="card">
+                    <!-- Loot Events -->
+                    <div class="col-lg-3">
+                        <div class="card h-100">
+
                             <div class="card-header">
-                                <h6><i class="fas fa-treasure-chest"></i> Loot Events</h6>
+                                <h6>
+                                    <i class="fas fa-treasure-chest"></i>
+                                    Loot Events
+                                </h6>
                             </div>
+
                             <div class="card-body">
+
                                 <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <input type="time" class="form-control" id="lootTime" placeholder="Loot time">
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="number" class="form-control" id="lootAmount" placeholder="Amount" min="0">
-                                    </div>
+
                                     <div class="col-12">
-                                        <button type="button" class="btn btn-warning w-100" onclick="addLootEvent()">
-                                            <i class="fas fa-plus"></i> Add Loot
+                                        <input
+                                            type="time"
+                                            class="form-control"
+                                            id="lootTime">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="lootAmount"
+                                            placeholder="Amount"
+                                            min="0">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button
+                                            type="button"
+                                            class="btn btn-warning w-100"
+                                            onclick="addLootEvent()">
+
+                                            <i class="fas fa-plus"></i>
+                                            Add Loot
                                         </button>
                                     </div>
+
                                 </div>
 
                                 <div class="table-responsive">
@@ -188,41 +242,65 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
+
                                         <tbody id="lootEventsTable">
                                             <tr>
-                                                <td colspan="3" class="text-center text-muted">No loot events added</td>
+                                                <td colspan="3"
+                                                    class="text-center text-muted">
+                                                    No loot events added
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
-                                <button type="button" class="btn btn-success w-100 mt-3" onclick="calculateAdvancedSplit()">
-                                    <i class="fas fa-calculator"></i> Calculate Distribution
+                                <button
+                                    type="button"
+                                    class="btn btn-success w-100 mt-3"
+                                    onclick="calculateAdvancedSplit()">
+
+                                    <i class="fas fa-calculator"></i>
+                                    Calculate Distribution
                                 </button>
+
                             </div>
                         </div>
                     </div>
 
+                    <!-- Final Results -->
                     <div class="col-lg-4">
-                        <div class="card">
+                        <div class="card h-100">
+
                             <div class="card-header">
-                                <h5><i class="fas fa-chart-bar"></i> Final Results</h5>
+                                <h5>
+                                    <i class="fas fa-chart-bar"></i>
+                                    Final Results
+                                </h5>
                             </div>
+
                             <div class="card-body">
                                 <div id="advancedResults">
-                                    <div class="text-center text-muted py-4">
+
+                                    <div class="text-center text-muted py-5">
                                         <i class="fas fa-chart-bar fa-3x mb-3"></i>
-                                        <p>Add players and loot events, then calculate to see distribution</p>
+
+                                        <p>
+                                            Add players and loot events,
+                                            then calculate to see distribution
+                                        </p>
                                     </div>
+
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-
+`
     <!-- Footer -->
     <footer class="text-center py-4 mt-5">
         <div class="footer-credit">
