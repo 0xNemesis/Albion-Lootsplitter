@@ -232,67 +232,135 @@ function displaySimpleResults(results, totalLoot, totalDuration) {
     showSuccess('Loot split calculated successfully!');
 }
 
-function addAdvancedPlayer() {
-    const name = document.getElementById('advPlayerName').value.trim();
-    const joinTime = document.getElementById('advJoinTime').value;
-    const leaveTime = document.getElementById('advLeaveTime').value;
-    
-    if (!name) {
-        showError('Please enter a player name');
-        return;
-    }
-    
-    if (!joinTime) {
-        showError('Please enter a join time');
+function generatePlayerRows() {
+    const count = parseInt(
+        document.getElementById('playerCount').value
+    );
+
+    if (!count || count <= 0) {
+        showError('Please enter valid player count');
         return;
     }
 
-    if (advancedPlayers.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-        showError('Player already exists');
-        return;
+    advancedPlayers = [];
+
+    for (let i = 0; i < count; i++) {
+        advancedPlayers.push({
+            id: Date.now() + i,
+            name: '',
+            joinTime: '',
+            leaveTime: ''
+        });
     }
-    
-    const player = {
-        id: Date.now(),
-        name: name,
-        joinTime: joinTime,
-        leaveTime: leaveTime || null
-    };
-    
-    advancedPlayers.push(player);
+
     updateAdvancedPlayersTable();
-    
-    document.getElementById('advPlayerName').value = '';
-    document.getElementById('advJoinTime').value = '';
-    document.getElementById('advLeaveTime').value = '';
-    
-    showSuccess(`Player "${name}" added to party`);
+
+    showSuccess(`${count} player rows generated`);
 }
 
-function removeAdvancedPlayer(playerId) {
-    advancedPlayers = advancedPlayers.filter(p => p.id !== playerId);
+function addEditablePlayerRow() {
+    advancedPlayers.push({
+        id: Date.now(),
+        name: '',
+        joinTime: '',
+        leaveTime: ''
+    });
+
     updateAdvancedPlayersTable();
-    showSuccess('Player removed from party');
+}
+
+function updatePlayerField(id, field, value) {
+    const player = advancedPlayers.find(
+        p => p.id === id
+    );
+
+    if (player) {
+        player[field] = value;
+    }
+}
+
+function removeAdvancedPlayer(id) {
+    advancedPlayers =
+        advancedPlayers.filter(
+            p => p.id !== id
+        );
+
+    updateAdvancedPlayersTable();
 }
 
 function updateAdvancedPlayersTable() {
-    const tbody = document.getElementById('advPlayersTable');
-    
+    const tbody =
+        document.getElementById(
+            'advPlayersTable'
+        );
+
     if (advancedPlayers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No players added</td></tr>';
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4"
+                    class="text-center text-muted">
+                    No players added
+                </td>
+            </tr>
+        `;
         return;
     }
-    
-    tbody.innerHTML = advancedPlayers.map(player => `
+
+    tbody.innerHTML =
+        advancedPlayers.map(player => `
         <tr>
-            <td><strong>${player.name}</strong></td>
-            <td>${player.joinTime}</td>
-            <td>${player.leaveTime || '<span class="text-success">Active</span>'}</td>
+
             <td>
-                <button class="btn btn-danger btn-sm" onclick="removeAdvancedPlayer(${player.id})">
+                <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Name"
+                    value="${player.name}"
+                    oninput="
+                    updatePlayerField(
+                        ${player.id},
+                        'name',
+                        this.value
+                    )">
+            </td>
+
+            <td>
+                <input
+                    type="time"
+                    class="form-control form-control-sm"
+                    value="${player.joinTime}"
+                    oninput="
+                    updatePlayerField(
+                        ${player.id},
+                        'joinTime',
+                        this.value
+                    )">
+            </td>
+
+            <td>
+                <input
+                    type="time"
+                    class="form-control form-control-sm"
+                    value="${player.leaveTime || ''}"
+                    oninput="
+                    updatePlayerField(
+                        ${player.id},
+                        'leaveTime',
+                        this.value
+                    )">
+            </td>
+
+            <td>
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="
+                    removeAdvancedPlayer(
+                        ${player.id}
+                    )">
                     <i class="fas fa-trash"></i>
                 </button>
             </td>
+
         </tr>
     `).join('');
 }
@@ -327,6 +395,31 @@ function addLootEvent() {
     
     showSuccess(`Loot event added: ${formatNumber(lootAmount)} at ${lootTime}`);
 }
+function updateLootField(
+    id,
+    field,
+    value
+) {
+    const loot =
+        lootEvents.find(
+            e => e.id === id
+        );
+
+    if (!loot) return;
+
+    if (field === 'amount') {
+        loot[field] =
+            parseFloat(value) || 0;
+    } else {
+        loot[field] = value;
+    }
+
+    lootEvents.sort(
+        (a, b) =>
+        timeToMinutes(a.time) -
+        timeToMinutes(b.time)
+    );
+}
 
 function removeLootEvent(eventId) {
     lootEvents = lootEvents.filter(e => e.id !== eventId);
@@ -335,29 +428,82 @@ function removeLootEvent(eventId) {
 }
 
 function updateLootEventsTable() {
-    const tbody = document.getElementById('lootEventsTable');
-    
+    const tbody =
+        document.getElementById(
+            'lootEventsTable'
+        );
+
     if (lootEvents.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No loot events added</td></tr>';
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="3"
+                    class="text-center text-muted">
+                    No loot events added
+                </td>
+            </tr>
+        `;
         return;
     }
-    
-    tbody.innerHTML = lootEvents.map(event => `
+
+    tbody.innerHTML =
+        lootEvents.map(event => `
         <tr>
-            <td>${event.time}</td>
-            <td>${formatNumber(event.amount)}</td>
+
             <td>
-                <button class="btn btn-danger btn-sm" onclick="removeLootEvent(${event.id})">
+                <input
+                    type="time"
+                    class="form-control form-control-sm"
+                    value="${event.time}"
+                    onchange="
+                        updateLootField(
+                            ${event.id},
+                            'time',
+                            this.value
+                        )
+                    ">
+            </td>
+
+            <td>
+                <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    value="${event.amount}"
+                    min="0"
+                    onchange="
+                        updateLootField(
+                            ${event.id},
+                            'amount',
+                            this.value
+                        )
+                    ">
+            </td>
+
+            <td>
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="
+                        removeLootEvent(
+                            ${event.id}
+                        )
+                    ">
+
                     <i class="fas fa-trash"></i>
                 </button>
             </td>
+
         </tr>
     `).join('');
 }
 
 function calculateAdvancedSplit() {
-    if (advancedPlayers.length === 0) {
-        showError('Please add at least one player to the party');
+    const validPlayers = advancedPlayers.filter(
+        p => p.name.trim() && p.joinTime
+    );
+
+    if (validPlayers.length === 0) {
+        showError(
+            'Please add at least one valid player'
+        );
         return;
     }
     
@@ -369,7 +515,7 @@ function calculateAdvancedSplit() {
     const playerTotals = {};
     const playerDetails = {};
     
-    advancedPlayers.forEach(player => {
+    validPlayers.forEach(player => {
         playerTotals[player.name] = 0;
         playerDetails[player.name] = [];
     });
@@ -378,7 +524,7 @@ function calculateAdvancedSplit() {
         const lootTimeMinutes = timeToMinutes(event.time);
         const activePlayers = [];
         
-        advancedPlayers.forEach(player => {
+        validPlayers.forEach(player => {
             const joinMinutes = timeToMinutes(player.joinTime);
             const leaveMinutes = player.leaveTime ? timeToMinutes(player.leaveTime) : Infinity;
             
